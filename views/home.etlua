@@ -4,7 +4,7 @@
   <title>Hot Dog Fitness | Home</title>
   <body>
     <p>
-      Welcome, <%= session.current_user %>!
+      Welcome, <%= current_user.username %>!
     </p>
   </body>
 </html>

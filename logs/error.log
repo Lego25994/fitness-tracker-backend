@@ -1,2 +1,4 @@
 2021/01/11 17:31:18 [alert] 24649#0: lua_code_cache is off; this will hurt performance in /home/ocawesome101/Documents/fitness-tracker-backend/nginx.conf.compiled:16
 2021/01/11 17:35:39 [alert] 25123#0: lua_code_cache is off; this will hurt performance in /home/ocawesome101/Documents/fitness-tracker-backend/nginx.conf.compiled:16
+2021/01/11 18:08:35 [alert] 26511#0: lua_code_cache is off; this will hurt performance in /home/ocawesome101/Documents/fitness-tracker-backend/nginx.conf.compiled:16
+2021/01/18 16:00:59 [alert] 9150#0: lua_code_cache is off; this will hurt performance in /home/ocawesome101/Documents/fitness-tracker-backend/nginx.conf.compiled:16

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+
+<html>
+  <title>Hot Dog Fitness | Home</title>
+  <body>
+    <p>
+      Welcome, <%= session.current_user %>!
+    </p>
+  </body>
+</html>

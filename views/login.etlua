@@ -7,7 +7,7 @@
   <body>
     <h1>Welcome to the Fitness Tracker</h1>
     <p>
-      <form id="credentials">
+      <form id="credentials" action="/login" method="POST">
         <label for="username">Username:<br></label>
         <input type="text" id="username" name="username">
         <br><br>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+
+<html>
+  <title>
+    Hot Dog Fitness | Error
+  </title>
+  There was an error.  That's all we know.
+  <br><br>
+  If you specified a user, a matching user wasn't found.
+</html>

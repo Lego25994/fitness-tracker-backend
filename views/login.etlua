@@ -10,12 +10,9 @@
       <form id="credentials" action="/login" method="POST">
         <label for="username">Username:<br></label>
         <input type="text" id="username" name="username">
-        <br><br>
+        <!--br><br>
         <label for="password">Password:<br></label>
-        <input type="password" id="password" name="password">
-        <br>
-        <button onclick="href='../index.html'">Log In</button>
-        <button>New? Sign Up Instead!</button>
+        <input type="password" id="password" name="password"-->
       </form>
       <br>
       <a href="../forgot-password/index.html">Forgot your password?</a>

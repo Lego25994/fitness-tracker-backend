@@ -10,4 +10,14 @@ return {
       "PRIMARY KEY (id)"
     })
   end,
+  [2] = function()
+    schema.create_table("challenges", {
+      {"id", types.serial},
+      {"from_id", types.integer},
+      {"to_id", types.integer},
+      {"challenge", types.varchar},
+      
+      "PRIMARY KEY (id)"
+    })
+  end,
 }

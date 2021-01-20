@@ -6,5 +6,11 @@
     <p>
       Welcome, <%= current_user.username %>!
     </p>
+    <form id="getchallenge" action="/challenge" method="POST">
+      <label for="challenge">Challenge</label>
+      <input type="text" id="challenge" name="challenge">
+      <label for="to">To</label>
+      <input type="text" id="to" name="to">
+    </form>
   </body>
 </html>

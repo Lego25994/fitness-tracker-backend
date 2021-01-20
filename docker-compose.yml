@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ".:/app"
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: "r00tp@55"
+      POSTGRES_DB: "hot_dog_fitness_development"
+    volumes:
+      - "db:/var/lib/postgresql/data"
+
+  dbadmin:
+    image: adminer
+    ports:
+      - "9080:8080"
+
+volumes:
+  db:

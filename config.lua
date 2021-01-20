@@ -1,13 +1,13 @@
 local config = require("lapis.config")
 
-function getenv(name, default) {
+function getenv(name, default)
   local val = os.getenv(name)
   if not val then
     return default
   else
     return val
   end
-}
+end
 
 config("development", {
   session_name = "hot_dog_fitness_session",

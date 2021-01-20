@@ -7,7 +7,7 @@ services:
     volumes:
       - ".:/app"
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
   db:
     image: postgres:13
@@ -20,7 +20,7 @@ services:
   dbadmin:
     image: adminer
     ports:
-      - "9080:8080"
+      - "127.0.0.1:9080:8080"
 
 volumes:
   db:

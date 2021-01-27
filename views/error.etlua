@@ -7,4 +7,6 @@
   There was an error.  That's all we know.
   <br><br>
   If you specified a user, a matching user wasn't found.
+  <br><br>
+  If you clicked on a challenge button, a matching challenge wasn't found.
 </html>

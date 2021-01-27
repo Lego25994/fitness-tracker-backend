@@ -12,6 +12,8 @@ services:
       DATABASE_HOST: "db"
       DATABASE_PASSWORD: "password"
       DATABASE_DATABASE: "hot_dog_fitness_development"
+    depends_on:
+      - "db"
 
   db:
     image: postgres:13

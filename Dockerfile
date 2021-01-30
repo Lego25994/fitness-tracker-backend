@@ -8,5 +8,7 @@ RUN luarocks install lapis
 WORKDIR /app
 ADD . /app
 
+USER nobody
+
 ENTRYPOINT [ "lapis" ]
 CMD [ "server" ]

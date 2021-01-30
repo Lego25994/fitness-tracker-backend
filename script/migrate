@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+set -o nounset
+
+for n in $(seq 1 10); do
+  echo Creating database tables...
+  if ! docker-compose run --rm app migrate; then
+    echo Try $n/10 did not work. Trying again in 10 seconds...
+    sleep 10
+  else
+    break
+  fi
+done

@@ -20,4 +20,7 @@ return {
       "PRIMARY KEY (id)"
     })
   end,
+  [3] = function()
+    schema.add_column("users", "password", "varchar(255) not null default '*'")
+  end
 }

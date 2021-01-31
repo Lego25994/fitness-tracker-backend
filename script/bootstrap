@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+set -o nounset
+
+docker-compose pull
+docker-compose build

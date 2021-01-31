@@ -51,6 +51,11 @@ app:post("/login", function(self)
     self.passwd_error = "no such user"
     return { render = "login" }
   else
+    local raw = self.params.password
+    if not bcrypt.verify(raw, matches[1].password) then
+      self.passwd_error = "invalid password"
+      return { render = "login" }
+    end
     self.session.current_user_id = matches[1].id
   end
   return { redirect_to = "/home" }

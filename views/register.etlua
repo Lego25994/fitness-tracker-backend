@@ -3,22 +3,22 @@
 <!-- link rel="stylesheet"-->
 
 <html>
-  <title>Hot Dog Fitness | Login</title>
+  <title>Hot Dog Fitness | Register</title>
   <body>
-    <h1>Welcome to the Fitness Tracker</h1>
+    <h1>Create a New Account</h1>
     <p>
-      <%= passwd_error %>
-      <form id="credentials" action="/login" method="POST">
+      <%= register_error %>
+      <form id="credentials" action="/register" method="POST">
         <label for="username">Username:<br></label>
         <input type="text" id="username" name="username">
         <br><br>
         <label for="password">Password:<br></label>
         <input type="password" id="password" name="password">
         <br><br>
-        <input type="submit" value="Log In">
+        <input type="submit" value="Create Account">
       </form>
       <br>
-      <a href="/register">Or, register an account</a>
+      <a href="/login">Wait no take me back</a>
     </p>
   </body>
 </html>

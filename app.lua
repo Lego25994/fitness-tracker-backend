@@ -1,9 +1,12 @@
+local bcrypt = require("bcrypt")
 local lapis = require("lapis")
 local model = require("lapis.db.model").Model
 local users = model:extend("users", {
   relations = { {"challenges", has_many = "challenges", key = "from_id"} } })
 local challenges = model:extend("challenges", {
   relations = { {"from", belongs_to = "users"}, {"to", belongs_to = "users"} } })
+
+local BCRYPT_DIGEST_CYCLES = 10
 
 local app = lapis.Application()
 app:enable("etlua")
@@ -32,21 +35,43 @@ app:get("/error", function(self)
 end)
 
 app:get("/login", function(self)
+  self.passwd_error = ""
   return { render = "login" }
+end)
+
+app:get("/register", function(self)
+  self.register_error = ""
+  return { render = "register" }
 end)
 
 app:post("/login", function(self)
   local user = self.params.username
   local matches = users:select("where username = ?", user)
   if #matches == 0 then
-    local new = users:create({
-      username = user
-    })
-    self.session.current_user_id = new.id
+    self.passwd_error = "no such user"
+    return { render = "login" }
   else
     self.session.current_user_id = matches[1].id
   end
   return { redirect_to = "/home" }
+end)
+
+app:post("/register", function(self)
+  local user = self.params.username
+  local matches = users:select("where username = ?", user)
+  if #matches > 0 then
+    self.register_error = "user already exists"
+    return { render = "register" }
+  else
+    local hashed = bcrypt.digest(self.params.password, BCRYPT_DIGEST_CYCLES)
+    local new = users:create({
+      username = user,
+      password = hashed,
+    })
+    self.session.current_user_id = new.id
+    return { redirect_to = "/home" }
+  end
+  return { redirect_to = "/login" }
 end)
 
 app:post("/challenge", function(self)

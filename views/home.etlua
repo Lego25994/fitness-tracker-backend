@@ -14,10 +14,23 @@
       <input type="submit" hidden=true>
     </form>
     <br>
-    CURRENT CHALLENGES
+    RECIEVED CHALLENGES
     <br>
     <ul class="list">
-      <% for i, item in ipairs(challenges) do %>
+      <% for i, item in ipairs(challenges_to) do %>
+      <% if item.to_id == current_user_id then %>
+      <form action="/complete" method="POST">
+        <button name="challenge" value="<%= item.challenge %>">
+          <%= item.challenge %>
+        </button>
+      </form>
+      <% end end %>
+    </ul>
+    <br>
+    SENT CHALLENGES
+    <br>
+    <ul class="list">
+      <% for i, item in ipairs(challenges_from) do %>
       <% if item.to_id == current_user_id then %>
       <form action="/complete" method="POST">
         <button name="challenge" value="<%= item.challenge %>">

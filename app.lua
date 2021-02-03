@@ -25,7 +25,8 @@ app:get("/home", function(self)
   else
     self.current_user = users:find(self.session.current_user_id)
     self.current_user_id = self.session.current_user_id
-    self.challenges = challenges:select("where to_id = ?", self.session.current_user_id)
+    self.challenges_to = challenges:select("where to_id = ?", self.session.current_user_id)
+    self.challenges_from = challenges:select("where from_id = ?", self.session.current_user_id)
     return { render = "home" }
   end
 end)
@@ -98,8 +99,8 @@ app:post("/challenge", function(self)
 end)
 
 app:post("/complete", function(self)
-  local challenges = challenges:select("where to_id = ?", self.session.current_user_id)
-  local challenge = challenges:find(self.params.challenge)
+  local matches = challenges:select("where to_id = ? and challenge = ? limit 1", self.session.current_user_id, self.params.challenge)
+  local challenge = matches[1]
   if not challenge then
     return { redirect_to = "/error" }
   end

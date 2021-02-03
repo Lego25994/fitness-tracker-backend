@@ -19,14 +19,19 @@ app:get("/", function(self)
   end
 end)
 
+local function home_page(self)
+  self.current_user = users:find(self.session.current_user_id)
+  self.current_user_id = self.session.current_user_id
+  self.challenges_to = challenges:select("where to_id = ?", self.session.current_user_id)
+  self.challenges_from = challenges:select("where from_id = ?", self.session.current_user_id)
+  self.users = users
+end
+
 app:get("/home", function(self)
   if not self.session.current_user_id then
     return { redirect_to = "/" }
   else
-    self.current_user = users:find(self.session.current_user_id)
-    self.current_user_id = self.session.current_user_id
-    self.challenges_to = challenges:select("where to_id = ?", self.session.current_user_id)
-    self.challenges_from = challenges:select("where from_id = ?", self.session.current_user_id)
+    home_page(self)
     return { render = "home" }
   end
 end)
@@ -93,9 +98,10 @@ app:post("/challenge", function(self)
       from_id = self.session.current_user_id,
       challenge = challenge
     })
-    return { redirect_to = "/home" }
+    home_page(self)
+    self.status_message = "challenge sent!"
+    return { render = "/home" }
   end
-  return { redirect_to = "/home" }
 end)
 
 app:post("/complete", function(self)
@@ -105,7 +111,21 @@ app:post("/complete", function(self)
     return { redirect_to = "/error" }
   end
   challenge:delete()
-  return { redirect_to = "/home" }
+  home_page(self)
+  self.status_message = "challenge completed!"
+  return { render = "/home" }
+end)
+
+app:post("/cancel", function(self)
+  local matches = challenges:select("where from_id = ? and challenge = ? limit 1", self.session.current_user_id, self.params.challenge)
+  local challenge = matches[1]
+  if not challenge then
+    return { redirect_to = "/error" }
+  end
+  challenge:delete()
+  home_page(self)
+  self.status_message = "challenge canceled!"
+  return { render = "/home" }
 end)
 
 return app

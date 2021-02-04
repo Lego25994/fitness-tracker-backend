@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 
+<link rel="stylesheet" href="https://oz-craft.pickardayune.com/hotdog.fitness.css">
+
 <html>
   <title>Hot Dog Fitness | Home</title>
   <body>
@@ -9,13 +11,19 @@
     <p><%= status_message or "" %></p>
     <form id="getchallenge" action="/challenge" method="POST">
       <label for="challenge">Challenge</label>
-      <input type="text" id="challenge" name="challenge">
-      <label for="to">To</label>
+      <!--input type="text" id="challenge" name="challenge"-->
+      <select id="challenge" name="challenge" required="required">
+        <% for i, user in ipairs(users:select("")) do %>
+        <% if user.id ~= current_user_id then %>
+          <option value="<%= i %>"><%= user.username %></option>
+        <% end end %>
+      </select>
+      <label for="to">to</label>
       <input type="text" id="to" name="to">
       <input type="submit" hidden=true>
     </form>
     <br>
-    RECIEVED CHALLENGES
+    Recieved Challenges (click to complete)
     <br>
     <ul class="list">
       <% for i, item in ipairs(challenges_to) do %>
@@ -25,10 +33,11 @@
           From <%= users:select("where id = ?", item.from_id)[1].username %>: <%= item.challenge %>
         </button>
       </form>
+      <br>
       <% end end %>
     </ul>
     <br>
-    SENT CHALLENGES
+    Sent Challenges (click to cancel)
     <br>
     <ul class="list">
       <% for i, item in ipairs(challenges_from) do %>
@@ -38,6 +47,7 @@
           To <%= users:select("where id = ?", item.to_id)[1].username %>: <%= item.challenge %>
         </button>
       </form>
+      <br>
       <% end end %>
     </ul>
   </body>

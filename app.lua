@@ -24,6 +24,8 @@ local function home_page(self)
   self.current_user_id = self.session.current_user_id
   self.challenges_to = challenges:select("where to_id = ?", self.session.current_user_id)
   self.challenges_from = challenges:select("where from_id = ?", self.session.current_user_id)
+  self.status_message = self.session.status_message
+  self.session.status_message = nil
   self.users = users
 end
 
@@ -36,12 +38,9 @@ app:get("/home", function(self)
   end
 end)
 
-app:get("/error", function(self)
-  return { render = "error" }
-end)
-
 app:get("/login", function(self)
-  self.passwd_error = ""
+  self.passwd_error = self.session.passwd_error
+  self.session.passwd_error = ""
   return { render = "login" }
 end)
 
@@ -54,13 +53,13 @@ app:post("/login", function(self)
   local user = self.params.username
   local matches = users:select("where username = ?", user)
   if #matches == 0 then
-    self.passwd_error = "no such user"
-    return { render = "login" }
+    self.session.passwd_error = "no such user"
+    return { redirect_to = "login" }
   else
     local raw = self.params.password
     if not bcrypt.verify(raw, matches[1].password) then
-      self.passwd_error = "invalid password"
-      return { render = "login" }
+      self.session.passwd_error = "invalid password"
+      return { redirect_to = "login" }
     end
     self.session.current_user_id = matches[1].id
   end
@@ -88,9 +87,10 @@ end)
 app:post("/challenge", function(self)
   local challenge = self.params.to
   local to = self.params.challenge
-  local matches = users:select("where username = ?", to)
+  local matches = users:select("where id = ?", to)
   if #matches == 0 or not self.session.current_user_id then
-    return { redirect_to = "/error" }
+    self.session.status_message = "no matching users"
+    return { redirect_to = "/home" }
   else
     local user = matches[1].id
     local challenge = challenges:create({
@@ -98,9 +98,8 @@ app:post("/challenge", function(self)
       from_id = self.session.current_user_id,
       challenge = challenge
     })
-    home_page(self)
-    self.status_message = "challenge sent!"
-    return { render = "/home" }
+    self.session.status_message = "challenge sent!"
+    return { redirect_to = "/home" }
   end
 end)
 
@@ -108,24 +107,24 @@ app:post("/complete", function(self)
   local matches = challenges:select("where to_id = ? and challenge = ? limit 1", self.session.current_user_id, self.params.challenge)
   local challenge = matches[1]
   if not challenge then
-    return { redirect_to = "/error" }
+    self.session.status_message = "challenge not found.  something went very wrong."
+    return { redirect_to = "/home" }
   end
   challenge:delete()
-  home_page(self)
-  self.status_message = "challenge completed!"
-  return { render = "/home" }
+  self.session.status_message = "challenge completed!"
+  return { redirect_to = "/home" }
 end)
 
 app:post("/cancel", function(self)
   local matches = challenges:select("where from_id = ? and challenge = ? limit 1", self.session.current_user_id, self.params.challenge)
   local challenge = matches[1]
   if not challenge then
-    return { redirect_to = "/error" }
+    self.session.status_message = "challenge not found.  something went very wrong."
+    return { redirect_to = "/home" }
   end
   challenge:delete()
-  home_page(self)
-  self.status_message = "challenge canceled!"
-  return { render = "/home" }
+  self.session.status_message = "challenge canceled!"
+  return { redirect_to = "/home" }
 end)
 
 return app

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<!-- link rel="stylesheet"-->
+<link rel="stylesheet" href="https://oz-craft.pickardayune.com/hotdog.fitness.css">
 
 <html>
   <title>Hot Dog Fitness | Login</title>
-  <body>
-    <h1>Welcome to the Fitness Tracker</h1>
+  <body class="login">
+    <h1 style="font-size: 40pt;">Welcome to Hot Dog Fitness</h1>
     <p>
       <%= passwd_error %>
       <form id="credentials" action="/login" method="POST">

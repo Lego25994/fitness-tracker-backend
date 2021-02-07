@@ -11,7 +11,6 @@
     <p><%= status_message or "" %></p>
     <form id="getchallenge" action="/challenge" method="POST">
       <label for="challenge">Challenge</label>
-      <!--input type="text" id="challenge" name="challenge"-->
       <select id="challenge" name="challenge" required="required">
         <% for i, user in ipairs(users:select("")) do %>
         <% if user.id ~= current_user_id then %>

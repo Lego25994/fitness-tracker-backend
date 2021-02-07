@@ -1,5 +1,6 @@
 local bcrypt = require("bcrypt")
 local lapis = require("lapis")
+local db = require("lapis.db")
 local model = require("lapis.db.model").Model
 local users = model:extend("users", {
   relations = { {"challenges", has_many = "challenges", key = "from_id"} } })
@@ -22,8 +23,12 @@ end)
 local function home_page(self)
   self.current_user = users:find(self.session.current_user_id)
   self.current_user_id = self.session.current_user_id
-  self.challenges_to = challenges:select("where to_id = ?", self.session.current_user_id)
-  self.challenges_from = challenges:select("where from_id = ?", self.session.current_user_id)
+  self.challenges_to = challenges:select(
+        "where to_id = ? and completed_at is null and canceled_at is null",
+        self.session.current_user_id)
+  self.challenges_from = challenges:select(
+        "where from_id = ? and completed_at is null and canceled_at is null",
+        self.session.current_user_id)
   self.status_message = self.session.status_message
   self.session.status_message = nil
   self.users = users
@@ -96,7 +101,8 @@ app:post("/challenge", function(self)
     local challenge = challenges:create({
       to_id = user,
       from_id = self.session.current_user_id,
-      challenge = challenge
+      challenge = challenge,
+      created_at = db.format_date()
     })
     self.session.status_message = "challenge sent!"
     return { redirect_to = "/home" }
@@ -110,7 +116,8 @@ app:post("/complete", function(self)
     self.session.status_message = "challenge not found.  something went very wrong."
     return { redirect_to = "/home" }
   end
-  challenge:delete()
+  challenge.completed_at = db.format_date()
+  challenge:update("completed_at")
   self.session.status_message = "challenge completed!"
   return { redirect_to = "/home" }
 end)
@@ -122,7 +129,8 @@ app:post("/cancel", function(self)
     self.session.status_message = "challenge not found.  something went very wrong."
     return { redirect_to = "/home" }
   end
-  challenge:delete()
+  challenge.canceled_at = db.format_date()
+  challenge:update("canceled_at")
   self.session.status_message = "challenge canceled!"
   return { redirect_to = "/home" }
 end)

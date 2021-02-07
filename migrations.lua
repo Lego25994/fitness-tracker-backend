@@ -22,5 +22,10 @@ return {
   end,
   [3] = function()
     schema.add_column("users", "password", "varchar(255) not null default '*'")
-  end
+  end,
+  [4] = function()
+    schema.add_column("challenges", "created_at", "timestamp without time zone")
+    schema.add_column("challenges", "canceled_at", "timestamp without time zone")
+    schema.add_column("challenges", "completed_at", "timestamp without time zone")
+  end,
 }

@@ -29,7 +29,7 @@
       <% if item.to_id == current_user_id then %>
       <form action="/complete" method="POST">
         <button name="challenge" value="<%= item.challenge %>">
-          From <%= users:select("where id = ?", item.from_id)[1].username %>: <%= item.challenge %>
+          From <%= users:select("where id = ?", item.from_id)[1].username %> at <%= item.created_at %> UTC: <%= item.challenge %>
         </button>
       </form>
       <br>

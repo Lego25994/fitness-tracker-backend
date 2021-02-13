@@ -29,6 +29,7 @@ local function home_page(self)
   self.challenges_from = challenges:select(
         "where from_id = ? and completed_at is null and canceled_at is null",
         self.session.current_user_id)
+  self.challenges_all = challenges:select()
   self.status_message = self.session.status_message
   self.session.status_message = nil
   self.users = users
@@ -40,6 +41,39 @@ app:get("/home", function(self)
   else
     home_page(self)
     return { render = "home" }
+  end
+end)
+
+app:get("/leaderboard", function(self)
+  if not self.session.current_user_id then
+    return { redirect_to = "/" }
+  else
+    local challenges = challenges:select()
+    local map = {}
+    self.leaderboard = {}
+    local leaderboard = self.leaderboard
+    -- 1. step through 'challenges',  assembling a map of users to number of completed
+    --    challenges
+    -- 2. sort the list based on number of challenges completed
+    -- 3. stick the results into another table, in order
+    for i, challenge in ipairs(challenges) do
+      if challenge.completed_at then
+        if not map[challenge.to_id] then
+          map[challenge.to_id] = 0
+        end
+        map[challenge.to_id] = map[challenge.to_id] + 1
+      end
+    end
+    for user, finished in pairs(map) do
+      local place = 1
+      for i=1, #leaderboard, 1 do
+        if leaderboard[i].finished > finished then
+          place = place + 1
+        end
+      end
+      table.insert(leaderboard, place, {user = users:select("where id = ?", user)[1].username, finished = finished})
+    end
+    return { render = "leaderboard" }
   end
 end)
 

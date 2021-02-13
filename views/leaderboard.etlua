@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<link rel="stylesheet" href="https://oz-craft.pickardayune.com/hotdog.fitness.css">
+
+<html>
+  <title>
+    Hot Dog Fitness | Leaderboard
+  </title>
+  <body>
+    <h3>Global Leaderboard</h3> <a href="/home">Back</a>
+    <br><br>
+    <ul>
+      <% for i, data in ipairs(leaderboard) do %>
+      <li><%= i %>: <%= data.user %> (<%= data.finished %>)</li>
+      <% end %>
+    </ul>
+  </body>
+</html>

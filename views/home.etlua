@@ -6,7 +6,7 @@
   <title>Hot Dog Fitness | Home</title>
   <body>
     <p>
-      Welcome, <%= current_user.username %>!
+    Welcome, <%= current_user.username %>! <a href="/leaderboard">Leaderboard</a>
     </p>
     <p><%= status_message or "" %></p>
     <form id="getchallenge" action="/challenge" method="POST">
@@ -26,7 +26,7 @@
     <br>
     <ul class="list">
       <% for i, item in ipairs(challenges_to) do %>
-      <% if item.to_id == current_user_id then %>
+      <% if item.to_id == current_user_id and not item.canceled_at and not item.completed_at then %>
       <form action="/complete" method="POST">
         <button name="challenge" value="<%= item.challenge %>">
           From <%= users:select("where id = ?", item.from_id)[1].username %> at <%= item.created_at %> UTC: <%= item.challenge %>
@@ -40,7 +40,7 @@
     <br>
     <ul class="list">
       <% for i, item in ipairs(challenges_from) do %>
-      <% if item.from_id == current_user_id then %>
+      <% if item.from_id == current_user_id and not item.canceled_at and not item.completetd_at then %>
       <form action="/cancel" method="POST">
         <button name="challenge" value="<%= item.challenge %>">
           To <%= users:select("where id = ?", item.to_id)[1].username %>: <%= item.challenge %>
@@ -48,6 +48,24 @@
       </form>
       <br>
       <% end end %>
+    </ul>
+    <br>
+    Canceled/Completed
+    <br>
+    <ul class="list">
+      <% for i, item in ipairs(challenges_all) do %>
+        <% if item.canceled_at or item.completed_at then %>
+          <% if item.from_id == current_user_id then %>
+          <button name="challenge">
+            To <%= users:select("where id = ?", item.to_id)[1].username %>: <%= item.challenge %> (<%= item.canceled_at and "canceled" or item.completed_at and "completed" %>)
+          </button>
+          <br><br>
+          <% elseif item.to_id == current_user_id then %>
+          <button name="challenge">
+            From <%= users:select("where id = ?", item.from_id)[1].username %>: <%= item.challenge %> (<%= item.canceled_at and "canceled" or item.completed_at and "completed" %>)
+          </button>
+          <br><br>
+      <% end end end %>
     </ul>
   </body>
 </html>

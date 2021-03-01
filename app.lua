@@ -5,9 +5,13 @@ local model = require("lapis.db.model").Model
 local users = model:extend("users", {
   relations = { {"challenges", has_many = "challenges", key = "from_id"} } })
 local challenges = model:extend("challenges", {
-  relations = { {"from", belongs_to = "users"}, {"to", belongs_to = "users"} } })
+  relations = { {"from_id", belongs_to = "users"}, {"to_id", belongs_to = "users"} } })
+local friends = model:extend("friends", {
+  relations = { {"from_id", belongs_to = "users"}, {"to_id", belongs_to = "users"} } })
 
 local BCRYPT_DIGEST_CYCLES = 10
+
+local MAX_CHALLENGES = 10
 
 local app = lapis.Application()
 app:enable("etlua")
@@ -71,9 +75,31 @@ app:get("/leaderboard", function(self)
           place = place + 1
         end
       end
-      table.insert(leaderboard, place, {user = users:select("where id = ?", user)[1].username, finished = finished})
+      table.insert(leaderboard, place, {
+        user = users:select("where id = ?", user)[1].username,
+        finished = finished
+      })
     end
     return { render = "leaderboard" }
+  end
+end)
+
+app:get("/friends", function(self)
+  if not self.session.current_user_id then
+    return { redirect_to = "/" }
+  else
+    local cur_user = self.session.current_user_id
+    local friends = friends:select("where from_id = ? or to_id = ?",
+      cur_user, cur_user)
+    self.friends = {}
+    for i, friend in ipairs(friends) do
+      if friend.from_id == cur_user then
+        
+      elseif friend.to_id == cur_user then
+      else
+        error("somehow mismatched user <--> friend")
+      end
+    end
   end
 end)
 

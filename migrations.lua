@@ -28,4 +28,13 @@ return {
     schema.add_column("challenges", "canceled_at", "timestamp without time zone")
     schema.add_column("challenges", "completed_at", "timestamp without time zone")
   end,
+  [5] = function()
+    schema.create_table("friends", {
+      {"id", types.serial},
+      {"from_id", types.integer},
+      {"to_id", types.integer},
+      
+      "PRIMARY KEY (id)"
+    })
+  end
 }

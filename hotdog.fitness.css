@@ -1,0 +1,64 @@
+:root {
+  --blue: #00b0ff
+}
+
+html {
+	background: #f0f0f0
+}
+
+* {
+	font-family: sans;
+	font-size: 12pt;
+	align: center;
+	text-align: center
+}
+
+button, input[type=submit], option {
+	font-size: 12pt;
+	font-weight: bold;
+	background: var(--blue);
+	border-style: solid;
+	border: 5px solid var(--blue);
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px black;
+	padding: 8px 16px;
+	color: #fff;
+	width: 80%;
+	transition: box-shadow 0.3s, padding 0.5s
+}
+
+button:hover, input[type=submit]:hover {
+	box-shadow: 0px 0px 5px
+}
+
+select {
+	width: 30%;
+	border-radius: 5px;
+	border-style: solid;
+	padding: 6px 20px;
+	appearance: none;
+	outline: none;
+	background-color: #FFF;
+	border: none;
+	transition: box-shadow 0.3s;
+}
+
+select:focus {
+	box-shadow: 0px 0px 16px var(--blue)
+}
+
+input[type=text], input[type=password] {
+  width: 30%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 3px;
+  outline: var(--blue);
+  background-color: #fff;
+  transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  box-shadow: 0px 0px 16px var(--blue);
+}

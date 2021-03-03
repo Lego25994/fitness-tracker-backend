@@ -6,14 +6,14 @@
   <title>Hot Dog Fitness | Home</title>
   <body>
     <p>
-    Welcome, <%= current_user.username %>! <a href="/leaderboard">Leaderboard</a>
+    Welcome, <%= current_user.username %>! <a href="/leaderboard">Leaderboard</a> <a href="/friends">Friends</a>
     </p>
     <p><%= status_message or "" %></p>
     <form id="getchallenge" action="/challenge" method="POST">
       <label for="challenge">Challenge</label>
       <select id="challenge" name="challenge" required="required">
         <% for i, user in ipairs(users:select("")) do %>
-        <% if user.id ~= current_user_id then %>
+        <% if user.id ~= current_user_id and friends[user.id] then %>
           <option value="<%= i %>"><%= user.username %></option>
         <% end end %>
       </select>

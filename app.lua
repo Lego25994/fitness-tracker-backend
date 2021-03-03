@@ -37,6 +37,11 @@ local function home_page(self)
   self.status_message = self.session.status_message
   self.session.status_message = nil
   self.users = users
+  self.friends = {}
+  local interim = friends:select("where to_id = ?", self.current_user_id)
+  for k, v in pairs(interim) do
+    friends[v.from_id] = true
+  end
 end
 
 app:get("/home", function(self)
@@ -89,17 +94,44 @@ app:get("/friends", function(self)
     return { redirect_to = "/" }
   else
     local cur_user = self.session.current_user_id
-    local friends = friends:select("where from_id = ? or to_id = ?",
-      cur_user, cur_user)
+    local friends = friends:select("where from_id = ?",-- or to_id = ?",
+      cur_user)
     self.friends = {}
     for i, friend in ipairs(friends) do
-      if friend.from_id == cur_user then
+      if friend.to_id == cur_user then
         
-      elseif friend.to_id == cur_user then
+      elseif friend.from_id == cur_user then
+        self.friends[#self.friends + 1] = users:select("where id = ?", friend.to_id)[1].username
       else
         error("somehow mismatched user <--> friend")
       end
     end
+    self.users = users:select()
+  end
+  return { render = "friends" }
+end)
+
+app:post("/friend", function(self)
+  if not self.session.current_user_id then
+    return { redirect_to = "/login" }
+  else
+    local to = self.params.friend
+    local existing = friends:select("where to_id = ?", to)
+    if #existing > 0 then -- we're already friends with this user
+      return { redirect_to = "/friends" }
+    end
+    local matches = users:select("where id = ?", to)
+    if #matches == 0 then
+      self.session.status_message = "no matching users"
+      return { redirect_to = "/home" }
+    else
+      local user = matches[1].id
+      local newfriend = friends:create({
+        to_id = user,
+        from_id = self.session.current_user_id
+      })
+    end
+    return { redirect_to = "/friends" }
   end
 end)
 

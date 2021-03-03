@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+
+<link rel="stylesheet" href="https://oz-craft.pickardayune.com/hotdog.fitness.css">
+
+<html>
+  <title>
+    Hot Dog Fitness | Friends
+  </title>
+  <body>
+    <a href="/home">Back</a><br><br>
+    <% for i, friend in ipairs(friends) do %>
+      <p><%= friend %></p>
+    <% end %>
+
+    <form id="friend" action="/friend" method="POST">
+      <select id="friend" name="friend" required="required">
+        <% for i, user in ipairs(users) do %>
+        <% if user.id ~= session.current_user_id then %>
+        <option value="<%= i %>"><%= user.username %></option>
+        <% end end %>
+      </select>
+      <br><br>
+      <input type="submit" value="Befriend">
+    </form>
+  </body>
+</html>
